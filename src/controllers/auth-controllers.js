@@ -125,7 +125,7 @@ const generateResetPasswordToken = (user) => {
 export const signInController = async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email }); // const user = await User.findOne({ userName: req.body.userName });
-        if (!user || user.isActive === false)
+        if (!user || user.isActived === false)
             return res.status(404).json({ code: 404, message: 'Tài khoản không tồn tại hoặc đã bị xóa' });
 
         const isCorrect = await bcrypt.compare(req.body.password, user.password);
