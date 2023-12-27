@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes init
 app.use('/api/v1', router);
 // app.get('/', (req, res) => {
-//     res.send('this is a response from server');
+//     res.send('This is a response from server');
 // });
 
 // Socket io
