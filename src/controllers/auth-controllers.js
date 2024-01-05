@@ -198,20 +198,20 @@ export const resetPasswordController = async (req, res) => {
 };
 
 // Sign out controller
-// export const signOutController = async (req, res) => {
-//     try {
-//         const refreshToken = req.body.token;
-//         const currUser = await User.findById(req.user._id);
-//         let tokenArray = currUser.refreshTokens;
-//         tokenArray = tokenArray.filter((token) => token !== refreshToken);
-//         // console.log("tokenArray:", tokenArray);
-//         await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: tokenArray } });
-//         res.status(200).json({ code: 200, message: 'Đăng xuất thành công' });
-//     } catch (error) {
-//         res.status(400).json({ code: 400, message: 'Unexpected error!' });
-//         console.log(error);
-//     }
-// };
+export const signOutController = async (req, res) => {
+    try {
+        const refreshToken = req.body.token;
+        const currUser = await User.findById(req.user._id);
+        let tokenArray = currUser.refreshTokens;
+        tokenArray = tokenArray.filter((token) => token !== refreshToken);
+        // console.log("tokenArray:", tokenArray);
+        await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: tokenArray } });
+        res.status(200).json({ code: 200, message: 'Đăng xuất thành công' });
+    } catch (error) {
+        res.status(400).json({ code: 400, message: 'Unexpected error!' });
+        console.log(error);
+    }
+};
 
 // Change password controller
 // ...
