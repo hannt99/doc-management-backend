@@ -6,11 +6,11 @@ import {
     forgotPasswordController,
     resetPasswordController,
     // changePasswordController,
-    // signOutController,
+    signOutController,
     // getCurrentUserController,
     // refreshController
 } from '../controllers/auth-controllers.js';
-// import { verifyToken } from '../middlewares/verifyToken.js';
+import { verifyToken } from '../middlewares/verifyToken.js';
 
 const router = Router();
 
@@ -33,7 +33,7 @@ router.post('/reset-password', resetPasswordController);
 // router.post('/change-password', changePasswordController);
 
 // Sign out route
-// router.post('/sign-out', verifyToken, signOutController);
+router.post('/sign-out', verifyToken, signOutController);
 
 // Get current user route
 // router.get('/current-user', verifyToken, getCurrentUserController);
