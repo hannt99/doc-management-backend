@@ -124,7 +124,9 @@ const generateResetPasswordToken = (user) => {
 // Sign in controller
 export const signInController = async (req, res) => {
     try {
+        // console.log("req: ", req);
         const user = await User.findOne({ email: req.body.email }); // const user = await User.findOne({ userName: req.body.userName });
+        
         if (!user || user.isActived === false)
             return res.status(404).json({ code: 404, message: 'Tài khoản không tồn tại hoặc đã bị xóa' });
 
@@ -154,11 +156,29 @@ export const forgotPasswordController = async (req, res) => {
     try {
         const email = req.body.email;
 
-        const isEmailExist = await User.findOne({ email: email });
-        if (!isEmailExist) return res.status(403).json({ code: 403, message: 'Email không tồn tại' });
+        // const isEmailExist = await User.findOne({ email: email });
+        // if (!isEmailExist) return res.status(403).json({ code: 403, message: 'Email không tồn tại' });
 
-        const userData = await User.findOne({ email: email });
-        if (userData) {
+        // const userData = await User.findOne({ email: email });
+        // if (userData) {
+        //     const subject = 'Hệ thống quản lý văn bản - Đặt lại mật khẩu';
+        //     const resetPasswordToken = generateResetPasswordToken(userData);
+        //     const html = `<p> Xin chào ${userData.email}, Hãy nhấn vào <a href="${process.env.REACT_APP_BASE_URL}/reset-password">liên kết</a> này và đặt lại mật khẩu của bạn.</p>
+        //     <p>Thời gian hiệu lực trong vòng 10 phút.</p>`;
+        //     sendMail(userData.email, subject, html);
+        //     res.status(200).json({
+        //         code: 200,
+        //         message: 'Kiểm tra email và đặt lại mật khẩu của bạn',
+        //         resetPasswordToken: resetPasswordToken,
+        //     });
+        // } else {
+        //     res.status(400).json({ code: 400, message: 'Email không tồn tại' });
+        // }
+
+        let userData;
+        if (!(userData = await User.findOne({ email: email }))) {
+            return res.status(403).json({ code: 403, message: 'Email không tồn tại' });
+        } else {
             const subject = 'Hệ thống quản lý văn bản - Đặt lại mật khẩu';
             const resetPasswordToken = generateResetPasswordToken(userData);
             const html = `<p> Xin chào ${userData.email}, Hãy nhấn vào <a href="${process.env.REACT_APP_BASE_URL}/reset-password">liên kết</a> này và đặt lại mật khẩu của bạn.</p>
@@ -169,8 +189,6 @@ export const forgotPasswordController = async (req, res) => {
                 message: 'Kiểm tra email và đặt lại mật khẩu của bạn',
                 resetPasswordToken: resetPasswordToken,
             });
-        } else {
-            res.status(400).json({ code: 400, message: 'Email không tồn tại' });
         }
     } catch (error) {
         console.log(error);
