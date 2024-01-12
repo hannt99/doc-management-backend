@@ -8,9 +8,10 @@ import {
     // changePasswordController,
     signOutController,
     // getCurrentUserController,
-    // refreshController
+    refreshController
 } from '../controllers/auth-controllers.js';
 import { verifyToken } from '../middlewares/verifyToken.js';
+
 
 const router = Router();
 
@@ -39,6 +40,6 @@ router.post('/sign-out', verifyToken, signOutController);
 // router.get('/current-user', verifyToken, getCurrentUserController);
 
 // Refresh token route
-// router.post('/refresh/:userId', refreshController);
+router.post('/refresh/:userId', refreshController);
 
 export default router;

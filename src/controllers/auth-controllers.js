@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import sendMail from '../utils/email.js';
 import customLog from '../utils/customLog.js';
 
+
 // Generate verify email token
 // const generateVerifyEmailToken = (user, password) => {
 //     return jwt.sign(
@@ -125,7 +126,7 @@ const generateResetPasswordToken = (user) => {
 // Sign in controller
 export const signInController = async (req, res) => {
     try {
-        customLog(req);
+        // customLog(req);
         const user = await User.findOne({ email: req.body.email }); // const user = await User.findOne({ userName: req.body.userName });
 
         if (!user || user.isActived === false)
@@ -336,22 +337,6 @@ export const resetPasswordController = async (req, res) => {
     }
 };
 
-// Sign out controller
-export const signOutController = async (req, res) => {
-    try {
-        const refreshToken = req.body.token;
-        const currUser = await User.findById(req.user._id);
-        let tokenArray = currUser.refreshTokens;
-        tokenArray = tokenArray.filter((token) => token !== refreshToken);
-        // console.log("tokenArray:", tokenArray);
-        await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: tokenArray } });
-        res.status(200).json({ code: 200, message: 'Đăng xuất thành công' });
-    } catch (error) {
-        res.status(400).json({ code: 400, message: 'Unexpected error!' });
-        console.log(error);
-    }
-};
-
 // Change password controller
 // ...
 
@@ -367,27 +352,45 @@ export const signOutController = async (req, res) => {
 // };
 
 // Refresh token controller
-// export const refreshController = async (req, res) => {
-//     const refreshToken = req.body.token;
-//     if (!refreshToken) return res.status(401).json({ code: 401, message: 'You are not authenticated!' });
-//     const currUser = await User.findById(req.params.userId);
-//     if (!currUser?.refreshTokens?.includes(refreshToken)) {
-//         return res.status(403).json({ code: 403, message: 'Refresh token is not valid!' });
-//     }
+export const refreshController = async (req, res) => {
+    const refreshToken = req.body.token;
+    if (!refreshToken) return res.status(401).json({ code: 401, message: 'You are not authenticated!' });
 
-//     jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err, user) => {
-//         err && console.log(err); // ?
+    const currUser = await User.findById(req.params.userId);
+    if (!currUser?.refreshTokens?.includes(refreshToken)) {
+        return res.status(403).json({ code: 403, message: 'Refresh token is not valid!' });
+    }
 
-//         const newAccessToken = generateAccessToken(user);
-//         const newRefreshToken = generateRefreshToken(user);
+    jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err, user) => {
+        err && console.log(err);
 
-//         const newTokenArray = currUser?.refreshTokens?.filter((token) => token !== refreshToken);
-//         newTokenArray.push(newRefreshToken);
-//         await User.findByIdAndUpdate(currUser._id, { refreshTokens: newTokenArray });
+        const newAccessToken = generateAccessToken(user);
+        const newRefreshToken = generateRefreshToken(user);
 
-//         res.status(200).json({
-//             accessToken: newAccessToken,
-//             refreshToken: newRefreshToken,
-//         });
-//     });
-// };
+        const newTokenArray = currUser?.refreshTokens?.filter((token) => token !== refreshToken); // could pop last then append last or not?
+        newTokenArray.push(newRefreshToken);
+        await User.findByIdAndUpdate(currUser._id, { refreshTokens: newTokenArray });
+
+        res.status(200).json({
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+        });
+    });
+};
+
+// Sign out controller
+export const signOutController = async (req, res) => {
+    try {
+        const refreshToken = req.body.token;
+        const currUser = await User.findById(req.user._id);
+        let tokenArray = currUser.refreshTokens;
+        
+        tokenArray = tokenArray.filter((token) => token !== refreshToken);
+        await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: tokenArray } });
+
+        res.status(200).json({ code: 200, message: 'Đăng xuất thành công' });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ code: 400, message: 'Unexpected error!' });
+    }
+};
