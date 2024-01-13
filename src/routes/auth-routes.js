@@ -7,7 +7,7 @@ import {
     resetPasswordController,
     // changePasswordController,
     signOutController,
-    // getCurrentUserController,
+    getCurrentUserController,
     refreshController
 } from '../controllers/auth-controllers.js';
 import { verifyToken } from '../middlewares/verifyToken.js';
@@ -37,7 +37,7 @@ router.post('/reset-password', resetPasswordController);
 router.post('/sign-out', verifyToken, signOutController);
 
 // Get current user route
-// router.get('/current-user', verifyToken, getCurrentUserController);
+router.get('/current-user', verifyToken, getCurrentUserController);
 
 // Refresh token route
 router.post('/refresh/:userId', refreshController);
