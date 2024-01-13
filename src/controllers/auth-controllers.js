@@ -341,15 +341,15 @@ export const resetPasswordController = async (req, res) => {
 // ...
 
 // Get current user controller
-// export const getCurrentUserController = async (req, res) => {
-//     try {
-//         const currentUser = await User.findById(req.user._id);
-//         res.status(200).json(currentUser);
-//     } catch (error) {
-//         res.status(400).json({ code: 400, message: 'Unexpected error!' });
-//         console.log(error);
-//     }
-// };
+export const getCurrentUserController = async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.user._id);
+        res.status(200).json(currentUser);
+    } catch (error) {
+        res.status(400).json({ code: 400, message: 'Unexpected error!' });
+        console.log(error);
+    }
+};
 
 // Refresh token controller
 export const refreshController = async (req, res) => {
