@@ -1,5 +1,6 @@
 import nodeMailer from 'nodemailer';
 
+
 // Send verify mail
 const sendMail = async (receiver, subject, html) => {
     try {
@@ -23,7 +24,7 @@ const sendMail = async (receiver, subject, html) => {
 
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-                console.log('Error in sending email  ' + error);
+                console.log('Error in sending email: ' + error);
             } else {
                 console.log('Mail has been sent: ', info.response);
             }

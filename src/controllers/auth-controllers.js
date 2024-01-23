@@ -340,17 +340,6 @@ export const resetPasswordController = async (req, res) => {
 // Change password controller
 // ...
 
-// Get current user controller
-export const getCurrentUserController = async (req, res) => {
-    try {
-        const currentUser = await User.findById(req.user._id);
-        res.status(200).json(currentUser);
-    } catch (error) {
-        res.status(400).json({ code: 400, message: 'Unexpected error!' });
-        console.log(error);
-    }
-};
-
 // Refresh token controller
 export const refreshController = async (req, res) => {
     const refreshToken = req.body.token;
@@ -367,9 +356,11 @@ export const refreshController = async (req, res) => {
         const newAccessToken = generateAccessToken(user);
         const newRefreshToken = generateRefreshToken(user);
 
-        const newTokenArray = currUser?.refreshTokens?.filter((token) => token !== refreshToken); // could pop last then append last or not?
-        newTokenArray.push(newRefreshToken);
-        await User.findByIdAndUpdate(currUser._id, { refreshTokens: newTokenArray });
+        // const newTokenArray = currUser?.refreshTokens?.filter((token) => token !== refreshToken); // could pop last then append last or not?
+        // newTokenArray.push(newRefreshToken);
+        // await User.findByIdAndUpdate(currUser._id, { refreshTokens: newTokenArray });
+
+        await User.findByIdAndUpdate(currUser._id, { refreshTokens: newRefreshToken });
 
         res.status(200).json({
             accessToken: newAccessToken,
@@ -378,15 +369,30 @@ export const refreshController = async (req, res) => {
     });
 };
 
+// Get current user controller
+export const getCurrentUserController = async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.user._id);
+        res.status(200).json(currentUser);
+    } catch (error) {
+        res.status(400).json({ code: 400, message: 'Unexpected error!' });
+        console.log(error);
+    }
+};
+
 // Sign out controller
 export const signOutController = async (req, res) => {
     try {
         const refreshToken = req.body.token;
         const currUser = await User.findById(req.user._id);
-        let tokenArray = currUser.refreshTokens;
+
+        // let tokenArray = currUser.refreshTokens;
+        // tokenArray = tokenArray.filter((token) => token !== refreshToken);
+        // await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: tokenArray } });
+
+        // await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: [] } });
         
-        tokenArray = tokenArray.filter((token) => token !== refreshToken);
-        await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: tokenArray } });
+        await User.findByIdAndUpdate(req.user._id, { refreshTokens: [] });
 
         res.status(200).json({ code: 200, message: 'Đăng xuất thành công' });
     } catch (error) {
