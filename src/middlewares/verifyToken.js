@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import customLog from '../utils/customLog.js';
 
-
 export const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
     // customLog(req.headers);
@@ -12,7 +11,6 @@ export const verifyToken = (req, res, next) => {
         jwt.verify(token, process.env.ACCESS_SECRET, (err, user) => {
             if (err) return res.status(403).json('Token is not valid!');
             req.user = user;
-            // console.log('next() will be call');
             next();
         });
     } else {

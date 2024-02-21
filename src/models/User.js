@@ -1,11 +1,16 @@
 import mongoose from 'mongoose';
 
-
 const { Schema } = mongoose;
 
 const UserSchema = new Schema(
     {
-        fullName: {
+        email: {
+            type: String,
+            trim: true,
+            required: true,
+            unique: true,
+        },
+        password: {
             type: String,
             trim: true,
             required: true,
@@ -13,17 +18,13 @@ const UserSchema = new Schema(
         // userName: {
         //     type: String,
         //     trim: true,
-        //     required: true, 
+        //     required: true
         // },
-        email: {
+        fullName: {
             type: String,
             trim: true,
-            unique: true,
-            required: true,
-        },
-        password: {
-            type: String,
-            trim: true,
+            minlength: 2,
+            maxlength: 100,
             required: true,
         },
         gender: {
@@ -38,15 +39,15 @@ const UserSchema = new Schema(
             type: String,
             trim: true,
         },
-        role: {
-            type: String,
-            default: 'Member', // default: 'User',
-        },
-        department: {
+        avatar: {
             type: String,
             trim: true,
         },
-        avatar: {
+        role: {
+            type: String,
+            default: 'Member', // default: 'User'
+        },
+        department: {
             type: String,
             trim: true,
         },
@@ -58,9 +59,9 @@ const UserSchema = new Schema(
             type: Boolean,
             default: false,
         },
-        refreshTokens: {
-            type: Array,
-            default: [],
+        refreshToken: {
+            type: String,
+            default: '',
         },
     },
     { timestamps: true },
