@@ -16,6 +16,17 @@ const DocumentSchema = new Schema(
             maxlength: 500,
             trim: true,
         },
+        number: {
+            type: String,
+            trim: true,
+            required: true,
+            unique: true,
+        },
+        sendDate: {
+            type: String,
+            trim: true,
+            required: true,
+        },
         code: {
             type: String,
             minlength: 1,
@@ -39,6 +50,10 @@ const DocumentSchema = new Schema(
             maxlength: 500,
             trim: true,
             required: true,
+        },
+        currentLocation: {
+            type: String,
+            trim: true,
         },
         level: {
             type: String,
@@ -64,21 +79,6 @@ const DocumentSchema = new Schema(
         status: {
             type: String,
             default: 'Khởi tạo',
-        },
-        currentLocation: {
-            type: String,
-            trim: true,
-        },
-        number: {
-            type: String,
-            trim: true,
-            required: true,
-            unique: true,
-        },
-        sendDate: {
-            type: String,
-            trim: true,
-            required: true,
         },
     },
     {

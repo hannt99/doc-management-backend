@@ -61,9 +61,9 @@ export const deleteFileUrlController = async (req, res) => {
         if (!filename) return res.status(404).json({ code: 404, message: 'Không tìm thấy file' });
 
         const document = await Document.findById(req.params.documentId);
-        const attachFiles = document.attachFiles.filter((item) => item !== filename);
+        const newAttachFiles = document.attachFiles.filter((item) => item !== filename);
 
-        await Document.findByIdAndUpdate(req.params.documentId, { attachFiles: attachFiles });
+        await Document.findByIdAndUpdate(req.params.documentId, { attachFiles: newAttachFiles });
 
         res.status(200).json({ code: 200, message: 'Xóa file thành công' });
     } catch (error) {

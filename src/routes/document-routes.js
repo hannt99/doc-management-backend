@@ -20,17 +20,17 @@ const router = Router();
 // Create document route
 router.post('/create', verifyToken, isModerator, createDocumentController);
 
-// Upload file route
-router.post('/upload/:documentId', verifyToken, isModerator, upload.array('myFile', 10), uploadFileController);
-
-// Delete file url route
-router.patch('/delete-file-url/:documentId', verifyToken, isModerator, deleteFileUrlController);
-
 // Get all document route
 router.get('/get-all', verifyToken, isMember, getAllDocumentController);
 
 // Get document by ID route
 router.get('/get/:documentId', verifyToken, isMember, getDocumentByIdController);
+
+// Upload file route
+router.post('/upload/:documentId', verifyToken, isModerator, upload.array('myFile', 10), uploadFileController);
+
+// Delete file url route
+router.patch('/delete-file-url/:documentId', verifyToken, isModerator, deleteFileUrlController);
 
 // Update document route
 router.put('/update/:documentId', verifyToken, isModerator, updateDocumentController);
