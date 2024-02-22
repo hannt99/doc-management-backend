@@ -79,8 +79,13 @@ export const getAllDocumentController = async (req, res) => {
         if (currentUser.isActived === false)
             return res.status(403).json({ code: 403, message: 'Tài khoản tạm thời bị vô hiệu hóa' });
 
-        let { page, limit, documentName, note, code, type, level, status, issuedDate, documentIn, sender } = req.query;
+        let { page, limit, documentIn, documentName, note, code, type, issuedDate, sender, level, status} = req.query;
+        
         const queryFilters = {};
+
+        if (documentIn) {
+            queryFilters.documentIn = documentIn;
+        }
 
         if (documentName) {
             queryFilters.documentName = { $regex: documentName, $options: 'i' };
@@ -98,6 +103,14 @@ export const getAllDocumentController = async (req, res) => {
             queryFilters.type = type;
         }
 
+        if (issuedDate) {
+            queryFilters.issuedDate = issuedDate;
+        }
+
+        if (sender) {
+            queryFilters.sender = sender;
+        }
+
         if (level) {
             queryFilters.level = level;
         }
@@ -106,32 +119,20 @@ export const getAllDocumentController = async (req, res) => {
             queryFilters.status = status;
         }
 
-        if (issuedDate) {
-            queryFilters.issuedDate = issuedDate;
-        }
-
-        if (documentIn) {
-            queryFilters.documentIn = documentIn;
-        }
-
-        if (sender) {
-            queryFilters.sender = sender;
-        }
-
         if (!page) page = 1;
         if (!limit) limit = 5;
         const skip = (page - 1) * limit;
 
         const allDocuments = await Document.find(queryFilters);
 
-        const allDocumentIn = allDocuments.filter((adci) => adci.documentIn === true);
+        const allDocumentIn = allDocuments.filter((adci) => adci.documentIn === true); // all documents [IN]
 
         const allMemberDocumentIn = allDocumentIn.filter((item) =>
             item.assignTo.find((mem) => mem.value === req.user._id),
-        ); // all DocumentIn assign to you (member)
+        ); //  all documents [IN] assign to you (member)
 
-        const documents = await Document.find(queryFilters).sort({ createdAt: -1 }).skip(skip).limit(limit); // [with pagination]
-        const memberDocuments = documents.filter((item) => item.assignTo.find((mem) => mem.value === req.user._id)); // all DocumentIn assign to you [with pagination]
+        const documents = await Document.find(queryFilters).sort({ createdAt: -1 }).skip(skip).limit(limit); // all documents [both IN and OUT] [with pagination]
+        const memberDocuments = documents.filter((item) => item.assignTo.find((mem) => mem.value === req.user._id)); // all documents [both IN and OUT] assign to you [with pagination] 
 
         const allDocumentOut = allDocuments.filter((adco) => adco.documentIn === false);
 

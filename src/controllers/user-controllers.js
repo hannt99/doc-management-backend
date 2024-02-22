@@ -82,7 +82,7 @@ export const getAllUserController = async (req, res) => {
                       ],
                   }
                 : {},
-        ).select('-password');
+        ).select('-password -refreshTokens');
 
         users = users.filter((item) => item.role !== 'Admin');
         allUsers = allUsers.filter((item) => item.role !== 'Admin');

@@ -4,24 +4,6 @@ const Schema = mongoose.Schema;
 
 const DocumentSchema = new Schema(
     {
-        number: {
-            type: String,
-            trim: true,
-            required: true,
-            unique: true,
-        },
-        code: {
-            type: String,
-            minlength: 1,
-            maxlength: 200,
-            trim: true,
-            required: true,
-            unique: true,
-        },
-        documentIn: {
-            type: Boolean,
-            required: true,
-        },
         documentName: {
             type: String,
             minlength: 1,
@@ -34,29 +16,19 @@ const DocumentSchema = new Schema(
             maxlength: 500,
             trim: true,
         },
+        code: {
+            type: String,
+            minlength: 1,
+            maxlength: 200,
+            trim: true,
+            required: true,
+            unique: true,
+        },
         type: {
             type: String,
             trim: true,
         },
-        attachFiles: {
-            type: Array,
-            trim: true,
-            default: [],
-        },
         issuedDate: {
-            type: String,
-            trim: true,
-            required: true,
-        },
-        currentLocation: {
-            type: String,
-            trim: true,
-        },
-        level: {
-            type: String,
-            default: 'Bình thường',
-        },
-        sendDate: {
             type: String,
             trim: true,
             required: true,
@@ -67,6 +39,19 @@ const DocumentSchema = new Schema(
             maxlength: 500,
             trim: true,
             required: true,
+        },
+        level: {
+            type: String,
+            default: 'Bình thường',
+        },
+        documentIn: {
+            type: Boolean,
+            required: true,
+        },
+        attachFiles: {
+            type: Array,
+            trim: true,
+            default: [],
         },
         isHaveTask: {
             type: Boolean,
@@ -79,6 +64,21 @@ const DocumentSchema = new Schema(
         status: {
             type: String,
             default: 'Khởi tạo',
+        },
+        currentLocation: {
+            type: String,
+            trim: true,
+        },
+        number: {
+            type: String,
+            trim: true,
+            required: true,
+            unique: true,
+        },
+        sendDate: {
+            type: String,
+            trim: true,
+            required: true,
         },
     },
     {
