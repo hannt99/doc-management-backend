@@ -21,7 +21,7 @@ export const createDocumentTypeController = async (req, res) => {
     }
 };
 
-// Get list of all document types controller
+// Get all document types controller
 export const getAllDocumentTypeController = async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
