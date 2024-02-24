@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { createTaskTypeController, getAllTaskTypeController } from '../controllers/task-type-controllers.js';
 import { verifyToken } from '../middlewares/verifyToken.js';
 import { isMember, isModerator } from '../middlewares/role.js';
+import { createTaskTypeController, getAllTaskTypeController } from '../controllers/task-type-controllers.js';
 
 const router = Router();
 

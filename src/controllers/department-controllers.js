@@ -21,7 +21,7 @@ export const createDepartmentController = async (req, res) => {
     }
 };
 
-// Get all list department and pagination controller
+// Get list of all departments (and pagination) controller 
 export const getAllDepartmentController = async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);

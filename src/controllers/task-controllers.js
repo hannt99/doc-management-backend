@@ -16,29 +16,32 @@ export const createTaskController = async (req, res) => {
         const currentUser = await User.findById(req.user._id);
         if (currentUser.isActived === false)
             return res.status(403).json({ code: 403, message: 'Tài khoản tạm thời bị vô hiệu hóa' });
-        const newTask = new Task(req.body);
 
+        const newTask = new Task(req.body);
         await newTask.save();
 
         // Check deadline
         const startDate = new Date(newTask?.createdAt);
         const endDate = new Date(newTask?.dueDate);
         const allDateToDo = endDate.getTime() - startDate.getTime();
-        const outDateSoon = startDate.getTime() + (allDateToDo / 3) * 2;
+        const outDateSoon = startDate.getTime() + (allDateToDo * (2 / 3));
 
         schedule.scheduleJob(outDateSoon, async () => {
             await Task.findOneAndUpdate({ _id: newTask._id }, { status: 'Sắp đến hạn' });
+
             const notification = `Nhiệm vụ ${newTask.taskName} sắp đến hạn`;
             const linkTask = `${process.env.REACT_APP_BASE_URL}/tasks/detail/${newTask._id}`;
-            const newNotiId = await Promise.all(
+            
+            const newNoti = await Promise.all(
                 newTask.assignTo?.map(async (item) => {
-                    const newNotification = new Notification({ notification, userId: item.value, linkTask });
+                    const newNotification = new Notification({ notification, linkTask, userId: item.value });
                     await newNotification.save();
+                    
                     return { notiId: newNotification?._id, userId: newNotification?.userId };
                 }),
             );
             sendNotification(
-                newNotiId,
+                newNoti,
                 `Nhiệm vụ ${newTask?.taskName} sắp đến hạn`,
                 getAssignToIds(newTask?.assignTo),
                 `${process.env.REACT_APP_BASE_URL}/tasks/detail/${newTask._id}`,

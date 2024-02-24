@@ -12,7 +12,7 @@ const TaskSchema = new Schema(
             required: true,
         },
         type: {
-            type: String,
+            type: String, // no required => nullable; required => 1 -> ?; default => ???
         },
         level: {
             type: String,
@@ -25,14 +25,14 @@ const TaskSchema = new Schema(
         },
         status: {
             type: String,
-            required: true,
             default: 'Còn hạn',
+            required: true,
         },
         progress: {
             type: String,
             default: 'Đang xử lý',
         },
-        desc: {
+        describe: {
             type: String,
             maxlength: 1000,
             trim: true,

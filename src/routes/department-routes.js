@@ -16,7 +16,7 @@ const router = Router();
 // Create department route
 router.post('/create', verifyToken, isModerator, createDepartmentController);
 
-// Get list of all departments route
+// Get all departments route
 router.get('/get-all', verifyToken, isMember, getAllDepartmentController);
 
 // Get department by ID route

@@ -5,9 +5,9 @@ import { fileURLToPath } from 'url';
 import connectDb from './src/configs/db.js';
 import cors from 'cors';
 import router from './src/routes/index.js';
-import customLog from './src/utils/customLog.js';
 import http from 'http';
 import { Server } from 'socket.io';
+import customLog from './src/utils/customLog.js';
 
 dotenv.config();
 
