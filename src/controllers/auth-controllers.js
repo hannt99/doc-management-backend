@@ -92,7 +92,7 @@ export const signInController = async (req, res) => {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
-        await User.findByIdAndUpdate(user._id, { $set: { refreshToken: refreshToken } });
+        await User.findByIdAndUpdate(user._id, { $push: { refreshTokens: refreshToken } });
 
         res.status(200).json({
             code: 200,
@@ -308,11 +308,9 @@ export const refreshController = async (req, res) => {
         const newAccessToken = generateAccessToken(user);
         const newRefreshToken = generateRefreshToken(user);
 
-        // const newTokenArray = currUser?.refreshTokens?.filter((token) => token !== refreshToken); // could pop last then append last or not?
-        // newTokenArray.push(newRefreshToken);
-        // await User.findByIdAndUpdate(currUser._id, { refreshTokens: newTokenArray });
-
-        await User.findByIdAndUpdate(currUser._id, { $set: { refreshToken: newRefreshToken } });
+        const newTokenArray = currUser?.refreshTokens?.filter((token) => token !== refreshToken);
+        newTokenArray.push(newRefreshToken);
+        await User.findByIdAndUpdate(currUser._id, { refreshTokens: newTokenArray });
 
         res.status(200).json({
             accessToken: newAccessToken,
@@ -335,10 +333,14 @@ export const getCurrentUserController = async (req, res) => {
 // Sign out controller
 export const signOutController = async (req, res) => {
     try {
-        const refreshToken = req.body.token; // old refreshToken ?
         const currUser = await User.findById(req.user._id);
+        let tokenArray = currUser.refreshTokens;
 
-        // await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: '' }); // already have new refreshToken, do not need to update
+        const refreshToken = req.body.token;
+        tokenArray = tokenArray.filter((token) => token !== refreshToken);
+        // console.log(tokenArray);
+
+        await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: tokenArray } });
 
         res.status(200).json({ code: 200, message: 'Đăng xuất thành công' });
     } catch (error) {

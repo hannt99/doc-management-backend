@@ -14,24 +14,6 @@ const TaskSchema = new Schema(
         type: {
             type: String, // no required => nullable; required => 1 -> ?; default => ???
         },
-        level: {
-            type: String,
-            default: 'Bình thường',
-        },
-        dueDate: {
-            type: String,
-            trim: true,
-            required: true,
-        },
-        status: {
-            type: String,
-            default: 'Còn hạn',
-            required: true,
-        },
-        progress: {
-            type: String,
-            default: 'Đang xử lý',
-        },
         describe: {
             type: String,
             maxlength: 1000,
@@ -49,6 +31,24 @@ const TaskSchema = new Schema(
             type: Array,
             trim: true,
             default: [],
+        },
+        level: {
+            type: String,
+            default: 'Bình thường',
+        },
+        dueDate: {
+            type: String,
+            trim: true,
+            required: true,
+        },
+        status: {
+            type: String,
+            default: 'Còn hạn',
+            required: true,
+        },
+        progress: {
+            type: String,
+            default: 'Đang xử lý',
         },
         assignTo: {
             type: Array,

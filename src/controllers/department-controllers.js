@@ -28,9 +28,9 @@ export const getAllDepartmentController = async (req, res) => {
         if (currentUser.isActived === false)
             return res.status(403).json({ code: 403, message: 'Tài khoản tạm thời bị vô hiệu hóa' });
 
-        let { page, limit, search } = req.query;
-        if (!page) page = 1;
+        let { limit, page, search } = req.query;
         if (!limit) limit = 5;
+        if (!page) page = 1;
         const skip = (page - 1) * limit;
 
         const departments = await Department.find(search ? { departmentName: { $regex: search, $options: 'i' } } : {})
