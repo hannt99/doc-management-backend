@@ -41,29 +41,32 @@ export const createTaskController = async (req, res) => {
                 }),
             );
             sendNotification(
-                newNoti,
                 `Nhiệm vụ ${newTask?.taskName} sắp đến hạn`,
-                getAssignToIds(newTask?.assignTo),
                 `${process.env.REACT_APP_BASE_URL}/tasks/detail/${newTask._id}`,
+                getAssignToIds(newTask?.assignTo),
+                newNoti,
             );
         });
 
         schedule.scheduleJob(endDate, async () => {
             await Task.findOneAndUpdate({ _id: newTask._id }, { status: 'Quá hạn' });
+            
             const notification = `Nhiệm vụ ${newTask.taskName} đã quá hạn`;
             const linkTask = `${process.env.REACT_APP_BASE_URL}/tasks/detail/${newTask._id}`;
+            
             const newNotiId = await Promise.all(
                 newTask.assignTo?.map(async (item) => {
-                    const newNotification = new Notification({ notification, userId: item.value, linkTask });
+                    const newNotification = new Notification({ notification, linkTask, userId: item.value });
                     await newNotification.save();
+
                     return { notiId: newNotification._id, userId: newNotification.userId };
                 }),
             );
             sendNotification(
-                newNotiId,
                 `Nhiệm vụ ${newTask?.taskName} đã quá hạn`,
-                getAssignToIds(newTask?.assignTo),
                 `${process.env.REACT_APP_BASE_URL}/tasks/detail/${newTask._id}`,
+                getAssignToIds(newTask?.assignTo),
+                newNotiId,
             );
         });
 

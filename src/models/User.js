@@ -59,9 +59,9 @@ const UserSchema = new Schema(
             type: Boolean,
             default: false,
         },
-        refreshToken: {
-            type: String,
-            default: '',
+        refreshTokens: {
+            type: Array,
+            default: [],
         },
     },
     { timestamps: true },

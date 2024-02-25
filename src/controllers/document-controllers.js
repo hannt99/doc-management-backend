@@ -35,6 +35,7 @@ export const uploadFileController = async (req, res) => {
 
         const files = req.files;
         if (!files) return res.status(400).json({ code: 400, message: 'Hãy chọn ít nhất 1 file' });
+        
         const fileUrls = files.map((file) => {
             return process.env.BASE_URL + `/static/${file.filename}`;
         });
