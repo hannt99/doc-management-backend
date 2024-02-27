@@ -4,22 +4,6 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema(
     {
-        email: {
-            type: String,
-            trim: true,
-            required: true,
-            unique: true,
-        },
-        password: {
-            type: String,
-            trim: true,
-            required: true,
-        },
-        // userName: {
-        //     type: String,
-        //     trim: true,
-        //     required: true
-        // },
         fullName: {
             type: String,
             trim: true,
@@ -35,33 +19,49 @@ const UserSchema = new Schema(
             type: String,
             trim: true,
         },
-        phoneNumber: {
-            type: String,
-            trim: true,
-        },
         avatar: {
             type: String,
             trim: true,
         },
-        role: {
-            type: String,
-            default: 'Member', // default: 'User'
-        },
-        department: {
+        phoneNumber: {
             type: String,
             trim: true,
         },
-        isActived: {
-            type: Boolean,
-            default: false,
+        email: {
+            type: String,
+            trim: true,
+            required: true,
+            unique: true,
+        },
+        // userName: {
+        //     type: String,
+        //     trim: true,
+        //     required: true
+        // },
+        department: {
+            type: String,
+            trim: true,
         },
         isReqChangeInfo: {
             type: Boolean,
             default: false,
         },
+        password: {
+            type: String,
+            trim: true,
+            required: true,
+        },
         refreshTokens: {
             type: Array,
             default: [],
+        },
+        role: {
+            type: String,
+            default: 'Member', // default: 'User'
+        },
+        isActived: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true },
