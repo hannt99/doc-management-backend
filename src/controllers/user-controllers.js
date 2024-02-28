@@ -51,9 +51,9 @@ export const createUserController = async (req, res) => {
 // Get list of all users controller
 export const getAllUserController = async (req, res) => {
     try {
-        let { page, limit, search } = req.query;
-        if (!page) page = 1;
+        let { limit, page, search } = req.query;
         if (!limit) limit = 5;
+        if (!page) page = 1;
         const skip = (page - 1) * limit;
 
         let users = await User.find(
