@@ -77,6 +77,93 @@ export const createTaskController = async (req, res) => {
     }
 };
 
+// Get all task controller
+export const getAllTaskController = async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.user._id);
+        if (currentUser.isActived === false)
+            return res.status(403).json({ code: 403, message: 'Tài khoản tạm thời bị vô hiệu hóa' });
+        
+        let { page, limit, taskName, createdAt, dueDate, type, status, level, progress } = req.query;
+
+        if (!page) page = 1;
+        if (!limit) limit = 5;
+        const skip = (page - 1) * limit;
+
+        const adminFilters = {};
+        const memberFilters = {};
+
+        if (taskName) {
+            adminFilters.taskName = { $regex: taskName, $options: 'i' };
+            memberFilters.taskName = { $regex: taskName, $options: 'i' };
+        }
+
+        if (createdAt) {
+            adminFilters.createdAt = createdAt;
+            memberFilters.createdAt = createdAt;
+        }
+
+        if (dueDate) {
+            adminFilters.dueDate = dueDate;
+            memberFilters.dueDate = dueDate;
+        }
+
+        if (type) {
+            adminFilters.type = type;
+            memberFilters.type = type;
+        }
+
+        if (status) {
+            adminFilters.status = status;
+            memberFilters.status = status;
+        }
+
+        if (level) {
+            adminFilters.level = level;
+            memberFilters.level = level;
+        }
+
+        if (progress) {
+            adminFilters.progress = progress;
+            memberFilters.progress = progress;
+        }
+
+        memberFilters.assignTo = { $elemMatch: { value: req.user._id } };
+
+        const tasks = await Task.find(adminFilters).sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const allTasks = await Task.find(adminFilters);
+
+        const memberTasks = await Task.find(memberFilters).sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const allMemberTasks = await Task.find(memberFilters);
+
+        res.status(200).json({
+            code: 200,
+            tasks: tasks,
+            allTasks: allTasks,
+            memberTasks: memberTasks,
+            allMemberTasks: allMemberTasks,
+        });
+    } catch (error) {
+        res.status(400).json({ code: 400, message: 'Unexpected error' });
+        console.log(error);
+    }
+};
+
+// Get task by ID route
+export const getTaskByIdController = async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.user._id);
+        if (currentUser.isActived === false)
+            return res.status(403).json({ code: 403, message: 'Tài khoản tạm thời bị vô hiệu hóa' });
+        const task = await Task.findById(req.params.taskId);
+        if (!task) return res.status(404).json({ code: 404, message: 'Không tìm thấy công việc' });
+        res.status(200).json({ code: 200, data: task });
+    } catch (error) {
+        res.status(400).json({ code: 400, message: 'Unexpected error' });
+        console.log(error);
+    }
+};
+
 // Upload file controller
 export const uploadFileController = async (req, res) => {
     try {
@@ -307,91 +394,7 @@ export const deleteManyTaskController = async (req, res) => {
     }
 };
 
-// Get all task controller
-export const getAllTaskController = async (req, res) => {
-    try {
-        const currentUser = await User.findById(req.user._id);
-        if (currentUser.isActived === false)
-            return res.status(403).json({ code: 403, message: 'Tài khoản tạm thời bị vô hiệu hóa' });
-        let { page, limit, taskName, createdAt, dueDate, type, status, level, progress } = req.query;
 
-        if (!page) page = 1;
-        if (!limit) limit = 5;
-        const skip = (page - 1) * limit;
-
-        const adminFilters = {};
-        const memberFilters = {};
-
-        if (taskName) {
-            adminFilters.taskName = { $regex: taskName, $options: 'i' };
-            memberFilters.taskName = { $regex: taskName, $options: 'i' };
-        }
-
-        if (createdAt) {
-            adminFilters.createdAt = createdAt;
-            memberFilters.createdAt = createdAt;
-        }
-
-        if (dueDate) {
-            adminFilters.dueDate = dueDate;
-            memberFilters.dueDate = dueDate;
-        }
-
-        if (type) {
-            adminFilters.type = type;
-            memberFilters.type = type;
-        }
-
-        if (status) {
-            adminFilters.status = status;
-            memberFilters.status = status;
-        }
-
-        if (level) {
-            adminFilters.level = level;
-            memberFilters.level = level;
-        }
-
-        if (progress) {
-            adminFilters.progress = progress;
-            memberFilters.progress = progress;
-        }
-
-        memberFilters.assignTo = { $elemMatch: { value: req.user._id } };
-
-        const tasks = await Task.find(adminFilters).sort({ createdAt: -1 }).skip(skip).limit(limit);
-        const allTasks = await Task.find(adminFilters);
-
-        const memberTasks = await Task.find(memberFilters).sort({ createdAt: -1 }).skip(skip).limit(limit);
-        const allMemberTasks = await Task.find(memberFilters);
-
-        res.status(200).json({
-            code: 200,
-            tasks: tasks,
-            allTasks: allTasks,
-            memberTasks: memberTasks,
-            allMemberTasks: allMemberTasks,
-        });
-    } catch (error) {
-        res.status(400).json({ code: 400, message: 'Unexpected error' });
-        console.log(error);
-    }
-};
-
-// Get task by ID route
-export const getTaskByIdController = async (req, res) => {
-    try {
-        const currentUser = await User.findById(req.user._id);
-        if (currentUser.isActived === false)
-            return res.status(403).json({ code: 403, message: 'Tài khoản tạm thời bị vô hiệu hóa' });
-        const task = await Task.findById(req.params.taskId);
-        if (!task) return res.status(404).json({ code: 404, message: 'Không tìm thấy công việc' });
-        res.status(200).json({ code: 200, data: task });
-    } catch (error) {
-        res.status(400).json({ code: 400, message: 'Unexpected error' });
-        console.log(error);
-    }
-};
 
 // Submit resource controller
 export const uploadResourceController = async (req, res) => {
