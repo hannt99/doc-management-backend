@@ -1,6 +1,5 @@
 import nodeMailer from 'nodemailer';
 
-
 // Send verify mail
 const sendMail = async (receiver, subject, html) => {
     try {
