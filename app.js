@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import path from 'path';
 import { fileURLToPath } from 'url';
+import path from 'path';
 import connectDb from './src/configs/db.js';
 import cors from 'cors';
 import router from './src/routes/index.js';
