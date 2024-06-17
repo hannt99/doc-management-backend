@@ -1,6 +1,6 @@
 {
     "name": "doc-management-backend",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "",
     "main": "app.js",
     "type": "module",
@@ -26,5 +26,8 @@
         "node-schedule": "^2.1.1",
         "multer": "^1.4.5-lts.1",
         "socket.io": "^4.7.5"
+    },
+    "overrides": {
+        "braces": "^3.0.3"
     }
 }
